@@ -1,4 +1,6 @@
 import { IProduct } from "@/app/Allts/Typescript";
+import { Button } from "@heroui/react";
+import Link from "next/link";
 import React from "react";
 
 interface ParamType {
@@ -35,7 +37,13 @@ const Page = async ({ params }: ParamType) => {
     ) / data.markets.length;
 
   return (
-    <div className="min-h-screen bg-[#f5f8f5] p-3 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-[#f5f8f5] p-3 sm:p-4 md:p-6 mb-20">
+   
+    <Link href="/" className="pl-3 sm:pl-6 md:pl-10 lg:pl-22">
+  <Button className="bg-green-400 rounded-xl my-2">
+    Back
+  </Button>
+</Link>
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
 
         {/* Top Card */}

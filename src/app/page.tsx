@@ -6,7 +6,7 @@ import AllProduct from './componenets/AllProducts/Allproducts';
 
 const Home = () => {
   return (
-    <div>
+    <div className='mb-5 lg:mb-20'>
 <Hero></Hero>
 <Upprice></Upprice>
 <Lowprice></Lowprice>

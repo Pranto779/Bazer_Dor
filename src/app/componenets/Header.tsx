@@ -39,12 +39,10 @@ const Header = async () => {
 
           </div>
 
-          <Button
-            size="sm"
-            className="shrink-0"
-          >
-            Profile
-          </Button>
+       <div className="flex items-center gap-2">
+       <Button className='bg-transparent text-black'>সাইন ইন</Button>
+       <Button className='bg-green-500 text-white font-bold rounded-md px-3 py-1'>সাইন আপ</Button>
+       </div>
 
         </div>
       </div>
