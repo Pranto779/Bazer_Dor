@@ -1,56 +1,30 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
-export interface IProduct {
-  id: number;
-  slug: string;
-  nameBn: string;
-  category: string;
-  categoryNameBn: string;
-  categoryIcon: string;
-  unit: "kg" | "litre" | "dozen" | "piece";
-  image: string;
-  today: number;
-  yesterday: number;
-  lastWeek: number;
-  lastMonth: number;
+import { IProduct } from "../Allts/Typescript";
+import { getProducts } from "../Allapi/Api";
 
-  change: {
-    dir: "up" | "down" | "flat";
-    pct: number;
-  };
-
-  markets: {
-    market: string;
-    division: string;
-    min: number;
-    max: number;
-  };
-}
 const Marque = async () => {
-  const res = await fetch(
-    "https://api.api-store.workers.dev/api/bazardor/products",
-  );
-  const datas: IProduct[] = await res.json();
+  const datas = await getProducts();
 
   return (
     <Marquee
-      pauseOnHover
       speed={50}
       gradient={false}
-      className="border-y bg-white py-1 text-sm"
-    
+      className="border-y bg-white py-1 text-xs sm:text-sm"
     >
-      <div className="flex items-center gap-12">
+      <div className="flex items-center gap-6 sm:gap-8 md:gap-12">
         {datas.map((product: IProduct) => (
           <div
             key={product.id}
-            className="flex items-center gap-2 whitespace-nowrap text-sm"
+            className="flex items-center gap-1.5 sm:gap-2 whitespace-nowrap text-xs sm:text-sm"
           >
             {product.image}
 
-            <span className="font-medium text-gray-800 text-sm">{product.nameBn}</span>
+            <span className="font-medium text-gray-800 text-xs sm:text-sm">
+              {product.nameBn}
+            </span>
 
-            <span className="text-gray-700 text-sm">
+            <span className="text-gray-700 text-xs sm:text-sm">
               {product.today} টাকা/{product.unit}
             </span>
 

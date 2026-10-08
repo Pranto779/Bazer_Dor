@@ -3,6 +3,9 @@ import {Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 import Header from "./componenets/Header";
 import Marque from "./componenets/Marque";
+import Headerpage from "./componenets/Header";
+import { Suspense } from "react";
+import Footer from "./componenets/Footer";
 
 
 
@@ -25,10 +28,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-theme="light"
       className={`${notoserifbangla.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-slate-100">
+<Suspense fallback={<p>Loading...</p>}>
 <Header></Header>
+</Suspense>
 <Marque></Marque>
-        {children}</body>
+
+        {children}
+        <Footer></Footer>
+        </body>
     </html>
   );
 }
