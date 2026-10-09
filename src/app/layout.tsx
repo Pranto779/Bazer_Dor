@@ -23,10 +23,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
+    <html 
       lang="en"
       data-theme="light"
-      className={`${notoserifbangla.className} h-full antialiased`}
+      className={`${notoserifbangla.className} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-slate-100">
 <Suspense fallback={<p>Loading...</p>}>

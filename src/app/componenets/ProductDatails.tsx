@@ -13,10 +13,10 @@ const ProductDatails = ({ product }: Productsprops) => {
         <div className="bg-white border rounded-xl  sm:p-4 flex justify-between items-center gap-3 hover:border-slate-300 hover:translate-y-1 transition-all duration-200">
 
           <div className="flex gap-3 min-w-0">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
+            <div className="min-w-0 md:py-0 p-4">
+              <div className="flex items-center  gap-2">
 
-                <div className="bg-slate-100 rounded-xl px-2 sm:px-3 py-2 shrink-0 text-lg sm:text-xl">
+                <div className=" rounded-xl px-2 sm:px-3 py-2 shrink-0 text-lg  sm:text-xl">
                   {product.image}
                 </div>
 

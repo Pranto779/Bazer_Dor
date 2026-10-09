@@ -5,7 +5,10 @@ const AllProduct = async () => {
   const products = await getProducts();
 
   return (
-    <div className="bg-[#f5f6f4] p-4 rounded-xl container mx-auto" id="product">
+<div
+  id="product"
+  className="bg-[#f5f6f4] p-4 rounded-xl container mx-auto scroll-mt-20"
+>
 
       <h2 className="font-bold text-lg mb-4 flex items-center gap-2">
         সব পণ্য

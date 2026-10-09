@@ -49,16 +49,16 @@ const Page = async ({ params, searchParams }: ParamsPoos) => {
   return (
     <div className="mt-4 sm:mt-6 md:mt-8">
 
-    <Link href="/" className="pl-3 sm:pl-6 md:pl-10 lg:pl-28">
+    <Link href="/" className="pl-3  sm:pl-6 md:ml-3">
   <Button className="bg-green-400 rounded-xl my-2">
     Back
   </Button>
 </Link>
 
       {/* Category + Sort */}
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 rounded-2xl bg-white border">
+      <div className="container md:mx-auto md:w-full mx-auto w-[420px] px-4 md:px-6 py-4 rounded-2xl bg-white border ">
  
-        <div className="flex gap-2 sm:gap-3 items-center py-1 sm:py-2">
+        <div className="flex gap-2 sm:gap-3 items-center py-1 sm:py-2 ">
           <div className="text-xl sm:text-2xl">
             {data.image}
           </div>

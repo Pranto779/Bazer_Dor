@@ -39,7 +39,7 @@ const Page = async ({ params }: ParamType) => {
   return (
     <div className="min-h-screen bg-[#f5f8f5] p-3 sm:p-4 md:p-6 mb-20">
    
-    <Link href="/" className="pl-3 sm:pl-6 md:pl-10 lg:pl-22">
+    <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
   <Button className="bg-green-400 rounded-xl my-2">
     Back
   </Button>
@@ -69,11 +69,7 @@ const Page = async ({ params }: ParamType) => {
               </p>
 
               <p className="mt-2 text-xs sm:text-sm text-gray-600">
-                গড়পড়তা মূল্য এখন প্রায়
-                <span className="font-semibold text-black">
-                  {" "}
-                  {averagePrice.toFixed(2)} টাকা
-                </span>
+                গতকালের তুলনায় আজ দাম বেড়েছে  {data.today-data.yesterday} টাকা
               </p>
 
             </div>

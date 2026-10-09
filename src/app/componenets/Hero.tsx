@@ -34,10 +34,11 @@ const Hero = () => {
 
           <div className="flex gap-3">
 
-           <Link href={'#product'}>
-            <Button className="bg-green-600 rounded-xl w-full sm:w-auto">
-              সব পণ্য দেখুন
-            </Button></Link>
+     <Link href="#product">
+  <Button className="bg-green-600 rounded-xl w-full sm:w-auto">
+    সব পণ্য দেখুন
+  </Button>
+</Link>
 
           </div>
 
