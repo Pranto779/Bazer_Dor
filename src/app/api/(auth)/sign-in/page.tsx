@@ -36,6 +36,16 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+  const HandleGooGle = async () => {
+  const data = await authClient.signIn.social({
+    provider: "google",
+  });
+};
+const HandleGithub= async () => {
+    const data = await authClient.signIn.social({
+        provider: "github"
+    })
+}
   return (
     <>
       {" "}
@@ -192,6 +202,7 @@ export default function LoginPage() {
             <div className="grid grid-cols-2 gap-2">
               {" "}
               <button
+              onClick={HandleGooGle}
                 type="button"
                 className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
               >
@@ -218,6 +229,7 @@ export default function LoginPage() {
                 <span>Google দিয়ে চালিয়ে যান</span>{" "}
               </button>{" "}
               <button
+              onClick={HandleGithub}
                 type="button"
                 className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
               >

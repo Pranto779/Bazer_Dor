@@ -47,13 +47,13 @@ const Page = async ({ params, searchParams }: ParamsPoos) => {
   const data = datas[0];
 
   return (
-    <div className="mt-4 sm:mt-6 md:mt-8">
+    <div className="mt-4 sm:mt-6 md:mt-8 ">
 
 
-      {/* Category + Sort */}
-      <div className="container md:mx-auto md:w-full mx-auto w-[420px] px-4 md:px-6 py-4 rounded-2xl bg-white ">
+   
+      <div className="container md:mx-auto md:w-full mx-auto  border border-slate-200 w-[420px] px-4 md:px-6 py-4 rounded-2xl bg-white ">
  
-        <div className="flex gap-2 sm:gap-3 items-center py-1 sm:py-2 ">
+        <div className="flex gap-2  sm:gap-3 items-center py-1 sm:py-2 ">
           <div className="text-xl sm:text-2xl">
             {data.image}
           </div>
@@ -69,7 +69,7 @@ const Page = async ({ params, searchParams }: ParamsPoos) => {
 
       </div>
 
-      <div className="mt-3 sm:mt-4">
+      <div className="mt-3 sm:mt-4 ">
         <Sort></Sort>
       </div>
 
@@ -79,7 +79,7 @@ const Page = async ({ params, searchParams }: ParamsPoos) => {
         </p>
       </div>
 
-      {/* Products */}
+      
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 container mx-auto gap-3 sm:gap-4 md:gap-5 sm:my-8 px-3 sm:px-4 ">
 

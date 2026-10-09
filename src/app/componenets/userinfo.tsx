@@ -107,12 +107,12 @@ const Userinfo = () => {
                 </div>
 
                 <Link
-                  href="/profile"
+                  href="./profile"
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition hover:bg-green-50 hover:text-green-700"
                 >
                   <UserRound size={16} />
-                  প্রোফাইল
+                 আমার প্রোফাইল
                 </Link>
 
                 <button

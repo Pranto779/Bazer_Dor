@@ -9,7 +9,7 @@ const Hero = () => {
   return (
     <section className="container mx-auto px-3 sm:px-4 md:px-6 mt-6 sm:mt-8 md:mt-10">
 
-      <div className="flex flex-col-reverse items-center justify-between gap-6 sm:gap-8 rounded-3xl bg-white p-4 sm:p-6 md:p-8 md:flex-row">
+      <div className="flex flex-col-reverse  border border-slate-200 items-center justify-between gap-6 sm:gap-8 rounded-3xl bg-white p-4 sm:p-6 md:p-8 md:flex-row">
 
         <div className="w-full max-w-2xl space-y-4">
 

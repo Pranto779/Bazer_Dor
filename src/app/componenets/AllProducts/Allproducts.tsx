@@ -24,7 +24,7 @@ const AllProduct = async () => {
    <Link key={product.id} href={`./category/product/${product.id}`}>
           <div
           
-            className="bg-white rounded-xl p-4 flex justify-between items-center hover:border-slate-300 hover:translate-y-1 transition-all duration-200"
+            className="bg-white  border border-slate-200 rounded-xl p-4 flex justify-between items-center hover:border-slate-300 hover:translate-y-1 transition-all duration-200"
           >
          
 

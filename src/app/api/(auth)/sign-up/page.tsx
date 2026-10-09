@@ -38,7 +38,16 @@ if(!data){
 }
   };
 
-  
+   const HandleGooGle = async () => {
+  const data = await authClient.signIn.social({
+    provider: "google",
+  });
+};
+const HandleGithub= async () => {
+    const data = await authClient.signIn.social({
+        provider: "github"
+    })
+}
 
   return (
     <main className="min-h-screen bg-[#f0f5f0] px-4 py-4 font-sans text-[#252b25] sm:px-5 sm:py-5">
@@ -232,7 +241,57 @@ if(!data){
               অ্যাকাউন্ট তৈরি করুন
             </button>
           </form>
-
+    <div className="my-[15px] flex items-center gap-[15px]">
+              {" "}
+              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />{" "}
+              <span className="text-[13px] text-[#626962]">অথবা</span>{" "}
+              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />{" "}
+            </div>{" "}
+             <div className="grid grid-cols-2 gap-2">
+              {" "}
+              <button
+              onClick={HandleGooGle}
+                type="button"
+                className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
+              >
+                {" "}
+                <svg viewBox="0 0 48 48" className="h-[15px] w-[15px] shrink-0">
+                  {" "}
+                  <path
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                  />{" "}
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.94 46.98 31.78 46.98 24.55z"
+                  />{" "}
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.93 23.93 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19z"
+                  />{" "}
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                  />{" "}
+                </svg>{" "}
+                <span>Google দিয়ে চালিয়ে যান</span>{" "}
+              </button>{" "}
+              <button
+              onClick={HandleGithub}
+                type="button"
+                className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
+              >
+                {" "}
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-[15px] w-[15px] shrink-0 fill-[#252b25]"
+                >
+                  {" "}
+                  <path d="M12 .5A12 12 0 0 0 8.21 23.9c.6.11.82-.26.82-.58v-2.05c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.23-3.22-.13-.3-.54-1.53.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.65.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.62-2.8 5.64-5.48 5.94.43.37.81 1.1.81 2.22v3.3c0 .32.22.7.83.58A12 12 0 0 0 12 .5z" />{" "}
+                </svg>{" "}
+                <span>GitHub দিয়ে চালিয়ে যান</span>{" "}
+              </button>{" "}
+            </div>{" "}
           <p className="mt-3 text-center text-[14px]">
             অ্যাকাউন্ট আছে?{" "}
             <Link
