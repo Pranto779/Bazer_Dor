@@ -10,7 +10,7 @@ const ProductDatails = ({ product }: Productsprops) => {
   return (
     <div className="w-full">
       <Link href={`./product/${product.id}`}>
-        <div className="bg-white border rounded-xl  sm:p-4 flex justify-between items-center gap-3 hover:border-slate-300 hover:translate-y-1 transition-all duration-200">
+        <div className="bg-white rounded-xl  sm:p-4 flex justify-between items-center gap-3 hover:border-slate-300 hover:translate-y-1 transition-all duration-200">
 
           <div className="flex gap-3 min-w-0">
             <div className="min-w-0 md:py-0 p-4">

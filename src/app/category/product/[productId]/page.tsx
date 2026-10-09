@@ -39,11 +39,18 @@ const Page = async ({ params }: ParamType) => {
   return (
     <div className="min-h-screen bg-[#f5f8f5] p-3 sm:p-4 md:p-6 mb-20">
    
-    <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
-  <Button className="bg-green-400 rounded-xl my-2">
-    Back
-  </Button>
+    <div className="px-2">
+      <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
+হোম
 </Link>
+      <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
+{data.categoryNameBn}
+</Link>
+      <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
+{data.nameBn}
+</Link>
+
+    </div>
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
 
         {/* Top Card */}
@@ -145,7 +152,7 @@ const Page = async ({ params }: ParamType) => {
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-xl border p-4">
+            <div className="bg-gray-50 rounded-xl  p-4">
               <p className="text-sm text-gray-500">
                 গড় দাম
               </p>
@@ -163,7 +170,7 @@ const Page = async ({ params }: ParamType) => {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl border border-green-100 p-3 sm:p-5 md:p-6">
+        <div className="bg-white rounded-2xl  border-green-100 p-3 sm:p-5 md:p-6">
 
           <h2 className="font-bold text-lg sm:text-xl mb-4">
             বাজারভিত্তিক আজকের দাম
@@ -204,7 +211,7 @@ const Page = async ({ params }: ParamType) => {
                 {data.markets.map((item, i) => (
                   <tr
                     key={i}
-                    className="border-b hover:bg-gray-50"
+                    className="border-b border-slate-200 hover:bg-gray-50"
                   >
 
                     <td className="p-3 text-sm">

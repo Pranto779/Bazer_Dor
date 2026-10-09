@@ -24,7 +24,7 @@ const Upprice = async () => {
          <Link  key={product.id}  href={`./category/product/${product.id}`}>
           <div
            
-            className="bg-white border rounded-xl p-4 flex justify-between items-center gap-3 hover:border-slate-300 hover:translate-y-1 transition-all duration-200"
+            className="bg-white  rounded-xl p-4 flex justify-between items-center gap-3 hover:border-slate-300 hover:translate-y-1 transition-all duration-200"
           >
 
             <div className="flex gap-3 min-w-0">

@@ -1,16 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const onSubmit=async (e:React.SubmitEvent<HTMLElement>)=>{
+    e.preventDefault()
+
+const formData = new FormData(e.target as HTMLFormElement);
+
+const user = Object.fromEntries(
+  formData.entries()
+) as {
+  name: string;
+  email: string;
+  password: string;
+};
+
+const { data, error } = await authClient.signUp.email({
+...user,
+  callbackURL: "/",
+});
+
+
+if(data){
+    console.log(data);
+    redirect('/')
+    
+}
+if(!data){
+    console.log(error);
+    
+}
+  };
+
+  
 
   return (
     <main className="min-h-screen bg-[#f0f5f0] px-4 py-4 font-sans text-[#252b25] sm:px-5 sm:py-5">
-      <div className="mx-auto w-full max-w-[424px]">
-        {/* Header */}
+      <div onSubmit={onSubmit} className="mx-auto w-full max-w-[424px]">
         <header className="mb-4 text-center">
           <h1 className="text-[26px] font-bold leading-8">
             অ্যাকাউন্ট তৈরি করুন
@@ -21,10 +53,8 @@ export default function SignupPage() {
           </p>
         </header>
 
-        {/* Signup Card */}
         <section className="rounded-[17px] border border-[#dfe8df] bg-[#fbfcfb] px-6 pb-4 pt-4">
           <form className="space-y-3">
-            {/* Name */}
             <div>
               <label
                 htmlFor="name"
@@ -44,7 +74,6 @@ export default function SignupPage() {
               />
             </div>
 
-            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -64,7 +93,6 @@ export default function SignupPage() {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -87,7 +115,9 @@ export default function SignupPage() {
 
                 <button
                   type="button"
-                  aria-label={showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"}
+                  aria-label={
+                    showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"
+                  }
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[#777d77] hover:text-[#07883f]"
                 >
@@ -128,7 +158,6 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Confirm Password */}
             <div>
               <label
                 htmlFor="confirmPassword"
@@ -156,9 +185,7 @@ export default function SignupPage() {
                       ? "নিশ্চিতকরণ পাসওয়ার্ড লুকান"
                       : "নিশ্চিতকরণ পাসওয়ার্ড দেখুন"
                   }
-                  onClick={() =>
-                    setShowConfirmPassword(!showConfirmPassword)
-                  }
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[#777d77] hover:text-[#07883f]"
                 >
                   {showConfirmPassword ? (
@@ -198,7 +225,6 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="h-[38px] w-full rounded-[9px] bg-[#07883f] text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,100,40,0.25)] transition hover:bg-[#067537] active:scale-[0.99]"
@@ -207,7 +233,6 @@ export default function SignupPage() {
             </button>
           </form>
 
-          {/* Sign In Link */}
           <p className="mt-3 text-center text-[14px]">
             অ্যাকাউন্ট আছে?{" "}
             <Link
@@ -219,7 +244,6 @@ export default function SignupPage() {
           </p>
         </section>
 
-        {/* Home Link */}
         <div className="mt-4 text-center">
           <Link
             href="/"

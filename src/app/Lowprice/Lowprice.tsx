@@ -21,7 +21,7 @@ const Lowprice = async () => {
             <Link  key={product.id}  href={`./category/product/${product.id}`}>
    <div
             
-            className="bg-white border rounded-xl p-4 flex justify-between items-center hover:border-slate-300 hover:translate-1 all duration-200 "
+            className="bg-white  rounded-xl p-4 flex justify-between items-center hover:border-slate-300 hover:translate-1 all duration-200 "
           >
             <div className="flex gap-3 ">
               <div>

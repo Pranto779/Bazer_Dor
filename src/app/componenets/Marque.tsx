@@ -10,7 +10,7 @@ const Marque = async () => {
     <Marquee
       speed={100}
       gradient={false}
-      className="border-y bg-white  text-xl py-2 sm:text-sm sm:py-3"
+      className=" bg-white  text-xl py-2 sm:text-sm sm:py-3"
     >
       <div className="flex items-center gap-6 sm:gap-8 md:gap-12">
         {datas.map((product: IProduct) => (

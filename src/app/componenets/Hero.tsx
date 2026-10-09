@@ -11,7 +11,6 @@ const Hero = () => {
 
       <div className="flex flex-col-reverse items-center justify-between gap-6 sm:gap-8 rounded-3xl bg-white p-4 sm:p-6 md:p-8 md:flex-row">
 
-        {/* Left Content */}
         <div className="w-full max-w-2xl space-y-4">
 
           <div className="inline-flex rounded-full bg-green-100 border border-green-300 px-3 py-1 text-xs sm:text-sm font-medium text-green-700">
@@ -44,7 +43,7 @@ const Hero = () => {
 
         </div>
 
-        {/* Right Image */}
+    
         <div className="shrink-0">
 
           <Image

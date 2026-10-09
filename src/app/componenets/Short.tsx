@@ -19,9 +19,9 @@ const Sort = () => {
   };
 
   return (
-    <div className="flex justify-end  md:mx-auto md:w-full  w-[420px] items-center container mx-auto my-5 rounded-2xl bg-white  border py-3 px-5  gap-2">
+    <div className="flex justify-end  md:mx-auto md:w-full  w-[420px] items-center container mx-auto my-5 rounded-2xl bg-white   py-3 px-5  gap-2">
       <div className="text-sm text-gray-500">
-        সাজানো
+        সাজান
       </div>
 
       <select
