@@ -1,5 +1,3 @@
-
-
 import React, { Suspense } from "react";
 import { IProduct } from "@/app/Allts/Typescript";
 import ProductDatails from "@/app/componenets/ProductDatails";
@@ -9,14 +7,10 @@ interface ParamsPoos {
   params: {
     NavDatails: string[];
   };
-  searchParams: {
-    sort?: string;
-  };
 }
 
-const Page = async ({ params, searchParams }: ParamsPoos) => {
+const Page = async ({ params }: ParamsPoos) => {
   const { NavDatails } = params;
-  const { sort } = searchParams;
 
   const res = await fetch(
     `https://api.abcz.workers.dev/api/bazardor/products?category=${NavDatails}`,
@@ -27,19 +21,7 @@ const Page = async ({ params, searchParams }: ParamsPoos) => {
     }
   );
 
-  let datas: IProduct[] = await res.json();
-
-  if (sort === "low") {
-    datas = [...datas].sort(
-      (a, b) => Number(a.today) - Number(b.today)
-    );
-  }
-
-  if (sort === "high") {
-    datas = [...datas].sort(
-      (a, b) => Number(b.today) - Number(a.today)
-    );
-  }
+  const datas: IProduct[] = await res.json();
 
   const data = datas[0];
 
