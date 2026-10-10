@@ -132,7 +132,7 @@ className="flex items-center gap-2 rounded-lg p-1 transition hover:bg-gray-100"
     </div>
   ) : (
     <div className="flex items-center gap-2">
-      <Link href="/api/sign-in">
+      <Link href="/sign-in">
         <Button className="rounded-lg bg-transparent px-3 py-2 text-sm font-medium text-gray-800 transition hover:bg-gray-100">
           সাইন ইন
         </Button>

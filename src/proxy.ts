@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
 
   if (!session?.user) {
     return NextResponse.redirect(
-      new URL("/api/sign-in", request.url)
+      new URL("/sign-in", request.url)
     );
   }
 

@@ -375,7 +375,7 @@ return (
       <p className="mt-3 text-center text-[14px]">
         অ্যাকাউন্ট আছে?{" "}
         <Link
-          href="/api/sign-in"
+          href="/sign-in"
           className="font-semibold text-[#07883f] hover:underline"
         >
           সাইন ইন করুন
