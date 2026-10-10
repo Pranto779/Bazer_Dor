@@ -20,7 +20,7 @@ const Sort = () => {
   };
 
   return (
-    <div className="mx-2 my-4 flex w-[calc(100%-1rem)] items-center justify-end gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 sm:my-5 sm:mx-auto sm:w-full sm:px-5">
+    <div className="mx-2 my-4 flex w-[calc(100%-1rem)] items-center justify-end gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 sm:my-5  sm:container  sm:mx-auto sm:px-5">
       <div className="shrink-0 text-xs text-gray-500 sm:text-sm">
         সাজান
       </div>
