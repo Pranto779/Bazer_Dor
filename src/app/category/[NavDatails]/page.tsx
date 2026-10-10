@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+
 
 import React, { Suspense } from "react";
 import { IProduct } from "@/app/Allts/Typescript";
