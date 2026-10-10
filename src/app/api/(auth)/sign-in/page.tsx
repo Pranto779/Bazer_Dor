@@ -1,31 +1,72 @@
+
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (loading) return;
+
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
+
     const user = Object.fromEntries(formData.entries()) as {
       email: string;
       password: string;
     };
+
     try {
       const { data, error } = await authClient.signIn.email({
         ...user,
         callbackURL: "/",
       });
+
       if (error) {
-        toast.error("সাইন ইন ব্যর্থ হয়েছে!");
+        const errorMessage = error.message?.toLowerCase() || "";
+        const errorCode = error.code?.toLowerCase() || "";
+
+        // ইমেইলে অ্যাকাউন্ট না থাকলে
+        if (
+          errorMessage.includes("user not found") ||
+          errorMessage.includes("no user") ||
+          errorMessage.includes("user does not exist") ||
+          errorMessage.includes("user not exist") ||
+          errorMessage.includes("email not found") ||
+          errorCode.includes("user_not_found")
+        ) {
+          toast.error("আপনার এই ইমেইলে কোনো অ্যাকাউন্ট নেই!");
+        }
+        // পাসওয়ার্ড ভুল হলে
+        else if (
+          errorMessage.includes("invalid password") ||
+          errorMessage.includes("incorrect password") ||
+          errorMessage.includes("wrong password") ||
+          errorCode.includes("invalid_password")
+        ) {
+          toast.error("আপনার পাসওয়ার্ডটি ভুল হয়েছে!");
+        }
+        // অন্য কোনো সমস্যা হলে
+        else {
+          toast.error(
+            "সাইন ইন ব্যর্থ হয়েছে! ইমেইল ও পাসওয়ার্ড যাচাই করুন।",
+          );
+        }
+
         return;
       }
+
       if (data) {
         toast.success("সাইন ইন সফল হয়েছে!");
+
         setTimeout(() => {
           window.location.href = "/";
         }, 1500);
@@ -36,19 +77,31 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
   const HandleGooGle = async () => {
-  const data = await authClient.signIn.social({
-    provider: "google",
-  });
-};
-const HandleGithub= async () => {
-    const data = await authClient.signIn.social({
-        provider: "github"
-    })
-}
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+    } catch {
+      toast.error("Google দিয়ে সাইন ইন করা যায়নি! আবার চেষ্টা করুন।");
+    }
+  };
+
+  const HandleGithub = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "github",
+        callbackURL: "/",
+      });
+    } catch {
+      toast.error("GitHub দিয়ে সাইন ইন করা যায়নি! আবার চেষ্টা করুন।");
+    }
+  };
+
   return (
     <>
-      {" "}
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -64,7 +117,12 @@ const HandleGithub= async () => {
             fontWeight: "600",
             boxShadow: "0 8px 25px rgba(0, 0, 0, 0.12)",
           },
-          success: { iconTheme: { primary: "#ffffff", secondary: "#07883f" } },
+          success: {
+            iconTheme: {
+              primary: "#ffffff",
+              secondary: "#07883f",
+            },
+          },
           error: {
             style: {
               background: "#dc2626",
@@ -76,36 +134,31 @@ const HandleGithub= async () => {
             },
           },
         }}
-      />{" "}
+      />
+
       <main className="min-h-screen bg-[#f0f5f0] px-4 py-6 font-sans text-[#252b25] sm:px-5 sm:py-7">
-        {" "}
         <div className="mx-auto w-full max-w-[424px]">
-          {" "}
           <header className="mb-[25px] text-center">
-            {" "}
             <h1 className="text-[26px] font-bold leading-[38px]">
-              {" "}
-              সাইন ইন{" "}
-            </h1>{" "}
+              সাইন ইন
+            </h1>
+
             <p className="text-[14px] leading-[22px] text-[#777d77]">
-              {" "}
               বিস্তারিত দাম, বাজার তুলনা ও প্রোফাইল দেখতে অ্যাকাউন্টে
-              ঢুকুন।{" "}
-            </p>{" "}
-          </header>{" "}
+              ঢুকুন।
+            </p>
+          </header>
+
           <section className="rounded-[17px] border border-[#dfe8df] bg-[#fbfcfb] px-6 pb-[25px] pt-[23px]">
-            {" "}
             <form onSubmit={onSubmit} className="space-y-3">
-              {" "}
               <div>
-                {" "}
                 <label
                   htmlFor="email"
                   className="mb-[5px] block text-[14px] font-medium leading-[21px]"
                 >
-                  {" "}
-                  ইমেইল{" "}
-                </label>{" "}
+                  ইমেইল
+                </label>
+
                 <input
                   id="email"
                   name="email"
@@ -114,19 +167,18 @@ const HandleGithub= async () => {
                   autoComplete="email"
                   required
                   className="h-[41px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
-                />{" "}
-              </div>{" "}
+                />
+              </div>
+
               <div>
-                {" "}
                 <label
                   htmlFor="password"
                   className="mb-[5px] block text-[14px] font-medium leading-[21px]"
                 >
-                  {" "}
-                  পাসওয়ার্ড{" "}
-                </label>{" "}
+                  পাসওয়ার্ড
+                </label>
+
                 <div className="relative">
-                  {" "}
                   <input
                     id="password"
                     name="password"
@@ -136,7 +188,8 @@ const HandleGithub= async () => {
                     minLength={8}
                     required
                     className="h-[41px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 pr-10 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
-                  />{" "}
+                  />
+
                   <button
                     type="button"
                     aria-label={
@@ -145,7 +198,6 @@ const HandleGithub= async () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[#777d77] hover:text-[#07883f]"
                   >
-                    {" "}
                     {showPassword ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -158,11 +210,10 @@ const HandleGithub= async () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        {" "}
-                        <path d="M3 3l18 18" />{" "}
-                        <path d="M10.58 10.59a2 2 0 002.83 2.83" />{" "}
-                        <path d="M9.88 5.09A10.8 10.8 0 0112 4.9c5 0 8.27 4.11 9.5 7.1a10.9 10.9 0 01-3.02 4.12" />{" "}
-                        <path d="M6.61 6.61A11.8 11.8 0 002.5 12c.72 1.73 2.15 3.66 4.23 5.03A9.8 9.8 0 0012 19.1c1.1 0 2.12-.18 3.07-.5" />{" "}
+                        <path d="M3 3l18 18" />
+                        <path d="M10.58 10.59a2 2 0 002.83 2.83" />
+                        <path d="M9.88 5.09A10.8 10.8 0 0112 4.9c5 0 8.27 4.11 9.5 7.1a10.9 10.9 0 01-3.02 4.12" />
+                        <path d="M6.61 6.61A11.8 11.8 0 002.5 12c.72 1.73 2.15 3.66 4.23 5.03A9.8 9.8 0 0012 19.1c1.1 0 2.12-.18 3.07-.5" />
                       </svg>
                     ) : (
                       <svg
@@ -176,98 +227,97 @@ const HandleGithub= async () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        {" "}
-                        <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />{" "}
-                        <circle cx="12" cy="12" r="3" />{" "}
+                        <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
+                        <circle cx="12" cy="12" r="3" />
                       </svg>
-                    )}{" "}
-                  </button>{" "}
-                </div>{" "}
-              </div>{" "}
+                    )}
+                  </button>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
                 className="h-[42px] w-full rounded-[9px] bg-[#07883f] text-[15px] font-semibold text-white shadow-[0_3px_4px_rgba(0,100,40,0.25)] transition-colors hover:bg-[#067537] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {" "}
-                {loading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}{" "}
-              </button>{" "}
-            </form>{" "}
+                {loading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
+              </button>
+            </form>
+
             <div className="my-[15px] flex items-center gap-[15px]">
-              {" "}
-              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />{" "}
-              <span className="text-[13px] text-[#626962]">অথবা</span>{" "}
-              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />{" "}
-            </div>{" "}
+              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />
+              <span className="text-[13px] text-[#626962]">অথবা</span>
+              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />
+            </div>
+
             <div className="grid grid-cols-2 gap-2">
-              {" "}
               <button
-              onClick={HandleGooGle}
+                onClick={HandleGooGle}
                 type="button"
                 className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
               >
-                {" "}
-                <svg viewBox="0 0 48 48" className="h-[15px] w-[15px] shrink-0">
-                  {" "}
+                <svg
+                  viewBox="0 0 48 48"
+                  className="h-[15px] w-[15px] shrink-0"
+                >
                   <path
                     fill="#EA4335"
                     d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-                  />{" "}
+                  />
                   <path
                     fill="#4285F4"
                     d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.94 46.98 31.78 46.98 24.55z"
-                  />{" "}
+                  />
                   <path
                     fill="#FBBC05"
                     d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.93 23.93 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19z"
-                  />{" "}
+                  />
                   <path
                     fill="#34A853"
                     d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-                  />{" "}
-                </svg>{" "}
-                <span>Google দিয়ে চালিয়ে যান</span>{" "}
-              </button>{" "}
+                  />
+                </svg>
+
+                <span>Google দিয়ে চালিয়ে যান</span>
+              </button>
+
               <button
-              onClick={HandleGithub}
+                onClick={HandleGithub}
                 type="button"
                 className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
               >
-                {" "}
                 <svg
                   viewBox="0 0 24 24"
                   className="h-[15px] w-[15px] shrink-0 fill-[#252b25]"
                 >
-                  {" "}
-                  <path d="M12 .5A12 12 0 0 0 8.21 23.9c.6.11.82-.26.82-.58v-2.05c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.23-3.22-.13-.3-.54-1.53.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.65.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.62-2.8 5.64-5.48 5.94.43.37.81 1.1.81 2.22v3.3c0 .32.22.7.83.58A12 12 0 0 0 12 .5z" />{" "}
-                </svg>{" "}
-                <span>GitHub দিয়ে চালিয়ে যান</span>{" "}
-              </button>{" "}
-            </div>{" "}
+                  <path d="M12 .5A12 12 0 0 0 8.21 23.9c.6.11.82-.26.82-.58v-2.05c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.23-3.22-.13-.3-.54-1.53.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.65.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.62-2.8 5.64-5.48 5.94.43.37.81 1.1.81 2.22v3.3c0 .32.22.7.83.58A12 12 0 0 0 12 .5z" />
+                </svg>
+
+                <span>GitHub দিয়ে চালিয়ে যান</span>
+              </button>
+            </div>
+
             <p className="mt-[15px] text-center text-[14px] leading-[22px]">
-              {" "}
               অ্যাকাউন্ট নেই?{" "}
               <Link
                 href="/api/sign-up"
                 className="font-semibold text-[#07883f] hover:underline"
               >
-                {" "}
-                সাইন আপ করুন{" "}
-              </Link>{" "}
-            </p>{" "}
-          </section>{" "}
+                সাইন আপ করুন
+              </Link>
+            </p>
+          </section>
+
           <div className="mt-[22px] text-center">
-            {" "}
             <Link
               href="/"
               className="text-[14px] text-[#777d77] transition hover:text-[#07883f]"
             >
-              {" "}
-              ← হোম পেজে ফিরে যান{" "}
-            </Link>{" "}
-          </div>{" "}
-        </div>{" "}
-      </main>{" "}
+              ← হোম পেজে ফিরে যান
+            </Link>
+          </div>
+        </div>
+      </main>
     </>
   );
 }
