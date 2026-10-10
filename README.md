@@ -9,7 +9,7 @@ The goal of BazarDor is to make market price information easily accessible, help
 ## 🌐 Live Demo
 
 * **Live Site:** [bazer-dor.vercel.app](#)
-* **GitHub Repository:** [Add Your GitHub Repository URL Here](#)
+* **GitHub Repository:** [https://github.com/Pranto779/Bazer_Dor](#)
 
 ---
 
