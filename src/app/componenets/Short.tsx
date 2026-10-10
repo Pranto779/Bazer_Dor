@@ -41,8 +41,8 @@ const Sort = () => {
         "
       >
         <option value="">ডিফল্ট</option>
-        <option value="low">কম → বেশি</option>
-        <option value="high">বেশি → কম</option>
+        <option value="low"> দাম: কম থেকে বেশি </option>
+        <option value="high">দাম: বেশি থেকে কম</option>
       </select>
     </div>
   );

@@ -31,14 +31,14 @@ const Page = async ({ params }: ParamType) => {
 
   return (
     <div className="min-h-screen bg-[#f5f8f5] p-3 sm:p-4 md:p-6 mb-20">
-      <div className="px-2">
-        <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
-          হোম
+      <div className="px-2 py-3">
+        <Link href="/" className="pl-3 text-sm sm:pl-6 md:pl-3 hover:text-green-400">
+          হোম ›
         </Link>
-        <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
-          {data.categoryNameBn}
+        <Link href={`/category/${data.category}`} className="pl-3 text-sm sm:pl-6 md:pl-3 hover:text-green-400">
+          {data.categoryNameBn} ›
         </Link>
-        <Link href="/" className="pl-3 sm:pl-6 md:pl-3">
+        <Link href="" className="pl-3  sm:pl-6 md:pl-3">
           {data.nameBn}
         </Link>
       </div>

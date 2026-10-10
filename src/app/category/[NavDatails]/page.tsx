@@ -1,8 +1,6 @@
 import { IProduct } from "@/app/Allts/Typescript";
 import ProductDatails from "@/app/componenets/ProductDatails";
 import Sort from "@/app/componenets/Short";
-import { Button } from "@heroui/react";
-import Link from "next/link";
 
 import React from "react";
 
@@ -55,11 +53,11 @@ const Page = async ({ params, searchParams }: ParamsPoos) => {
  
         <div className="flex gap-2  sm:gap-3 items-center py-1 sm:py-2 ">
           <div className="text-xl sm:text-2xl">
-            {data.image}
+            {data?.categoryIcon}
           </div>
 
           <p className="text-sm sm:text-base">
-            {data.nameBn}
+            {data?.categoryNameBn}
           </p>
         </div>
 
