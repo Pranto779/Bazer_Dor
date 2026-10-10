@@ -24,7 +24,7 @@ return ( <div className="snap-start shrink-0">
 href={categoryPath}
 className={`${
           isActive ? "bg-green-400 border text-white border-green-700" : ""
-        } px-3 font-bold  py-1 text-sm rounded-2xl text-black transition-colors duration-200 `}
+        } inline-flex items-center gap-1.5 whitespace-nowrap px-2.5 py-1.5 text-xs font-bold rounded-2xl transition-colors duration-200 sm:px-3 sm:py-1.5 sm:text-sm md:px-4 md:py-2`}
 >
 {data.icon} <span>{data.nameBn}</span> </Link> </div>
 );
