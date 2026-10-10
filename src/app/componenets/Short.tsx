@@ -20,7 +20,7 @@ router.push(`?${params.toString()}`);
 };
 
 return (
-<div className="container mx-auto my-4 flex w-full items-center justify-end gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 sm:my-5 sm:px-5">
+<div className="container mx-auto my-4 flex w-full items-center justify-end gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 sm:my-5 sm:px-5 sm:mx-2">
 <div className="shrink-0 text-xs text-gray-500 sm:text-sm">
 সাজান
 </div>
