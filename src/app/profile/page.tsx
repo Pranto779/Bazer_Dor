@@ -2,7 +2,7 @@
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { ArrowLeft, LogOut } from "lucide-react";
+import {LogOut } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@heroui/react";
 export default function ProfilePage() {

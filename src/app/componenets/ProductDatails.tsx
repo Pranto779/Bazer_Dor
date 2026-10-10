@@ -1,4 +1,3 @@
-import React from "react";
 import { IProduct } from "../Allts/Typescript";
 import Link from "next/link";
 
