@@ -26,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-slate-100">
         <Suspense fallback={<p>Loading...</p>}>
-          {/* <Header></Header> */}
+          <Header></Header>
         </Suspense>
         <Marque></Marque>
         <Toaster position="top-center" />
