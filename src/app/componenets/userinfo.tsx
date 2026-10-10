@@ -67,13 +67,13 @@ return ( <div>
 type="button"
 onClick={() => setOpen(!open)}
 className="flex items-center gap-2 rounded-lg p-1 transition hover:bg-gray-100"
-> <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full ring-1 ring-green-500 ring-offset-2">
+> <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full  ring-offset-2">
 {user.image ? ( <Image
                src={user.image}
                alt="User Avatar"
-               width={40}
-               height={40}
-               className="h-full w-full object-cover"
+               width={30}
+               height={30}
+               className=" object-cover"
              />
 ) : ( <div className="flex h-full w-full items-center justify-center bg-green-100 text-green-700"> <UserRound size={15} /> </div>
 )} </div>

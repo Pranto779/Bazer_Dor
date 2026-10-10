@@ -3,315 +3,396 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const onSubmit=async (e:React.SubmitEvent<HTMLElement>)=>{
-    e.preventDefault()
+const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+const [loading, setLoading] = useState(false);
 
-const formData = new FormData(e.target as HTMLFormElement);
+const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+e.preventDefault();
 
-const user = Object.fromEntries(
-  formData.entries()
-) as {
-  name: string;
-  email: string;
-  password: string;
+if (loading) return;
+
+const formData = new FormData(e.currentTarget);
+
+const name = String(formData.get("name") || "");
+const email = String(formData.get("email") || "");
+const password = String(formData.get("password") || "");
+const confirmPassword = String(formData.get("confirmPassword") || "");
+
+if (password !== confirmPassword) {
+  toast.error("দুটি পাসওয়ার্ড মিলছে না!", {
+    position: "top-center",
+  });
+  return;
+}
+
+setLoading(true);
+
+try {
+  const { data, error } = await authClient.signUp.email({
+    name,
+    email,
+    password,
+    callbackURL: "/",
+  });
+
+  if (error) {
+    const message = error.message?.toLowerCase() || "";
+
+    if (
+      message.includes("already") ||
+      message.includes("exist") ||
+      message.includes("duplicate") ||
+      message.includes("taken")
+    ) {
+      toast.error(
+        "এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা হয়েছে! সাইন ইন করুন।",
+        {
+          position: "top-center",
+          duration: 4000,
+        }
+      );
+    } else {
+      toast.error(
+        "অ্যাকাউন্ট তৈরি করা যায়নি! আপনার তথ্য যাচাই করে আবার চেষ্টা করুন।",
+        {
+          position: "top-center",
+          duration: 4000,
+        }
+      );
+    }
+
+    return;
+  }
+
+  if (data) {
+    toast.success("সফলভাবে অ্যাকাউন্ট তৈরি হয়েছে!", {
+      position: "top-center",
+      duration: 3000,
+    });
+
+    window.location.href = "/";
+  }
+} catch (error) {
+  console.error("Signup error:", error);
+
+  toast.error("সমস্যা হয়েছে! আবার চেষ্টা করুন।", {
+    position: "top-center",
+  });
+} finally {
+  setLoading(false);
+}
+
 };
 
-const { data, error } = await authClient.signUp.email({
-...user,
-  callbackURL: "/",
+const HandleGooGle = async () => {
+try {
+const { error } = await authClient.signIn.social({
+provider: "google",
+callbackURL: "/",
 });
 
-
-if(data){
-    console.log(data);
-    redirect('/')
-    
-}
-if(!data){
-    console.log(error);
-    
-}
-  };
-
-   const HandleGooGle = async () => {
-  const data = await authClient.signIn.social({
-    provider: "google",
+  if (error) {
+    toast.error("গুগল দিয়ে সাইন আপ করা যায়নি! আবার চেষ্টা করুন।", {
+      position: "top-center",
+    });
+  }
+} catch {
+  toast.error("গুগল দিয়ে সাইন আপ করতে সমস্যা হয়েছে!", {
+    position: "top-center",
   });
-};
-const HandleGithub= async () => {
-    const data = await authClient.signIn.social({
-        provider: "github"
-    })
 }
 
-  return (
-    <main className="min-h-screen bg-[#f0f5f0] px-4 py-4 font-sans text-[#252b25] sm:px-5 sm:py-5">
-      <div onSubmit={onSubmit} className="mx-auto w-full max-w-[424px]">
-        <header className="mb-4 text-center">
-          <h1 className="text-[26px] font-bold leading-8">
-            অ্যাকাউন্ট তৈরি করুন
-          </h1>
+};
 
-          <p className="my-2 text-[13px] leading-5 text-[#777d77]">
-            বিনা খরচে সাইন আপ করে সব বিস্তারিত দাম দেখুন।
-          </p>
-        </header>
+const HandleGithub = async () => {
+try {
+const { error } = await authClient.signIn.social({
+provider: "github",
+callbackURL: "/",
+});
 
-        <section className="rounded-[17px] border border-[#dfe8df] bg-[#fbfcfb] px-6 pb-4 pt-4">
-          <form className="space-y-3">
-            <div>
-              <label
-                htmlFor="name"
-                className="mb-1 block text-[14px] font-medium"
-              >
-                নাম
-              </label>
+  if (error) {
+    toast.error("গিটহাব দিয়ে সাইন আপ করা যায়নি! আবার চেষ্টা করুন।", {
+      position: "top-center",
+    });
+  }
+} catch {
+  toast.error("গিটহাব দিয়ে সাইন আপ করতে সমস্যা হয়েছে!", {
+    position: "top-center",
+  });
+}
 
-              <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="যেমন: রাহিম উদ্দিন"
-                autoComplete="name"
-                required
-                className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
-              />
-            </div>
+};
 
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-1 block text-[14px] font-medium"
-              >
-                ইমেইল
-              </label>
+return (
+<main className="min-h-screen bg-[#f0f5f0] px-4 py-4 font-sans text-[#252b25] sm:px-5 sm:py-5">
+<div className="mx-auto w-full max-w-[424px]">
+<header className="mb-4 text-center">
+<h1 className="text-[26px] font-bold leading-8">
+অ্যাকাউন্ট তৈরি করুন
+</h1>
 
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                autoComplete="email"
-                required
-                className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
-              />
-            </div>
+      <p className="my-2 text-[13px] leading-5 text-[#777d77]">
+        বিনা খরচে সাইন আপ করে সব বিস্তারিত দাম দেখুন।
+      </p>
+    </header>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-1 block text-[14px] font-medium"
-              >
-                পাসওয়ার্ড
-              </label>
+    <section className="rounded-[17px] border border-[#dfe8df] bg-[#fbfcfb] px-6 pb-4 pt-4">
+      <form onSubmit={onSubmit} className="space-y-3">
+        <div>
+          <label
+            htmlFor="name"
+            className="mb-1 block text-[14px] font-medium"
+          >
+            নাম
+          </label>
 
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="কমপক্ষে ৮ অক্ষর"
-                  autoComplete="new-password"
-                  minLength={8}
-                  required
-                  className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 pr-10 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
-                />
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="যেমন: রহিম উদ্দিন"
+            autoComplete="name"
+            required
+            className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
+          />
+        </div>
 
-                <button
-                  type="button"
-                  aria-label={
-                    showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"
-                  }
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#777d77] hover:text-[#07883f]"
-                >
-                  {showPassword ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M3 3l18 18" />
-                      <path d="M10.58 10.59a2 2 0 002.83 2.83" />
-                      <path d="M9.88 5.09A10.8 10.8 0 0112 4.9c5 0 8.27 4.11 9.5 7.1a10.9 10.9 0 01-3.02 4.12" />
-                      <path d="M6.61 6.61A11.8 11.8 0 002.5 12c.72 1.73 2.15 3.66 4.23 5.03A9.8 9.8 0 0012 19.1c1.1 0 2.12-.18 3.07-.5" />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
+        <div>
+          <label
+            htmlFor="email"
+            className="mb-1 block text-[14px] font-medium"
+          >
+            ইমেইল
+          </label>
 
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="mb-1 block text-[14px] font-medium"
-              >
-                পাসওয়ার্ড নিশ্চিত করুন
-              </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            autoComplete="email"
+            required
+            className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
+          />
+        </div>
 
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="আবার লিখুন"
-                  autoComplete="new-password"
-                  minLength={8}
-                  required
-                  className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 pr-10 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
-                />
+        <div>
+          <label
+            htmlFor="password"
+            className="mb-1 block text-[14px] font-medium"
+          >
+            পাসওয়ার্ড
+          </label>
 
-                <button
-                  type="button"
-                  aria-label={
-                    showConfirmPassword
-                      ? "নিশ্চিতকরণ পাসওয়ার্ড লুকান"
-                      : "নিশ্চিতকরণ পাসওয়ার্ড দেখুন"
-                  }
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#777d77] hover:text-[#07883f]"
-                >
-                  {showConfirmPassword ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M3 3l18 18" />
-                      <path d="M10.58 10.59a2 2 0 002.83 2.83" />
-                      <path d="M9.88 5.09A10.8 10.8 0 0112 4.9c5 0 8.27 4.11 9.5 7.1a10.9 10.9 0 01-3.02 4.12" />
-                      <path d="M6.61 6.61A11.8 11.8 0 002.5 12c.72 1.73 2.15 3.66 4.23 5.03A9.8 9.8 0 0012 19.1c1.1 0 2.12-.18 3.07-.5" />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
+          <div className="relative">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="কমপক্ষে ৮ অক্ষর"
+              autoComplete="new-password"
+              minLength={8}
+              required
+              className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 pr-10 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
+            />
 
             <button
-              type="submit"
-              className="h-[38px] w-full rounded-[9px] bg-[#07883f] text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,100,40,0.25)] transition hover:bg-[#067537] active:scale-[0.99]"
+              type="button"
+              aria-label={
+                showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"
+              }
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#777d77] hover:text-[#07883f]"
             >
-              অ্যাকাউন্ট তৈরি করুন
-            </button>
-          </form>
-    <div className="my-[15px] flex items-center gap-[15px]">
-              {" "}
-              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />{" "}
-              <span className="text-[13px] text-[#626962]">অথবা</span>{" "}
-              <span className="h-[2px] flex-1 bg-[#e3e8e3]" />{" "}
-            </div>{" "}
-             <div className="grid grid-cols-2 gap-2">
-              {" "}
-              <button
-              onClick={HandleGooGle}
-                type="button"
-                className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
-              >
-                {" "}
-                <svg viewBox="0 0 48 48" className="h-[15px] w-[15px] shrink-0">
-                  {" "}
-                  <path
-                    fill="#EA4335"
-                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-                  />{" "}
-                  <path
-                    fill="#4285F4"
-                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.94 46.98 31.78 46.98 24.55z"
-                  />{" "}
-                  <path
-                    fill="#FBBC05"
-                    d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.93 23.93 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19z"
-                  />{" "}
-                  <path
-                    fill="#34A853"
-                    d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-                  />{" "}
-                </svg>{" "}
-                <span>Google দিয়ে চালিয়ে যান</span>{" "}
-              </button>{" "}
-              <button
-              onClick={HandleGithub}
-                type="button"
-                className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
-              >
-                {" "}
+              {showPassword ? (
                 <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
-                  className="h-[15px] w-[15px] shrink-0 fill-[#252b25]"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  {" "}
-                  <path d="M12 .5A12 12 0 0 0 8.21 23.9c.6.11.82-.26.82-.58v-2.05c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.23-3.22-.13-.3-.54-1.53.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.65.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.62-2.8 5.64-5.48 5.94.43.37.81 1.1.81 2.22v3.3c0 .32.22.7.83.58A12 12 0 0 0 12 .5z" />{" "}
-                </svg>{" "}
-                <span>GitHub দিয়ে চালিয়ে যান</span>{" "}
-              </button>{" "}
-            </div>{" "}
-          <p className="mt-3 text-center text-[14px]">
-            অ্যাকাউন্ট আছে?{" "}
-            <Link
-              href="/api/sign-in"
-              className="font-semibold text-[#07883f] hover:underline"
-            >
-              সাইন ইন করুন
-            </Link>
-          </p>
-        </section>
-
-        <div className="mt-4 text-center">
-          <Link
-            href="/"
-            className="text-[14px] text-[#777d77] transition hover:text-[#07883f]"
-          >
-            ← হোম পেজে ফিরে যান
-          </Link>
+                  <path d="M3 3l18 18" />
+                  <path d="M10.58 10.59a2 2 0 002.83 2.83" />
+                  <path d="M9.88 5.09A10.8 10.8 0 0112 4.9c5 0 8.27 4.11 9.5 7.1a10.9 10.9 0 01-3.02 4.12" />
+                  <path d="M6.61 6.61A11.8 11.8 0 002.5 12c.72 1.73 2.15 3.66 4.23 5.03A9.8 9.8 0 0012 19.1c1.1 0 2.12-.18 3.07-.5" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
+
+        <div>
+          <label
+            htmlFor="confirmPassword"
+            className="mb-1 block text-[14px] font-medium"
+          >
+            পাসওয়ার্ড নিশ্চিত করুন
+          </label>
+
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="আবার লিখুন"
+              autoComplete="new-password"
+              minLength={8}
+              required
+              className="h-[38px] w-full rounded-[9px] border border-[#dfe4df] bg-transparent px-3 pr-10 text-[14px] outline-none transition focus:border-[#07883f] focus:ring-2 focus:ring-[#07883f]/10"
+            />
+
+            <button
+              type="button"
+              aria-label={
+                showConfirmPassword
+                  ? "নিশ্চিতকরণ পাসওয়ার্ড লুকান"
+                  : "নিশ্চিতকরণ পাসওয়ার্ড দেখুন"
+              }
+              onClick={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#777d77] hover:text-[#07883f]"
+            >
+              {showConfirmPassword ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 3l18 18" />
+                  <path d="M10.58 10.59a2 2 0 002.83 2.83" />
+                  <path d="M9.88 5.09A10.8 10.8 0 0112 4.9c5 0 8.27 4.11 9.5 7.1a10.9 10.9 0 01-3.02 4.12" />
+                  <path d="M6.61 6.61A11.8 11.8 0 002.5 12c.72 1.73 2.15 3.66 4.23 5.03A9.8 9.8 0 0012 19.1c1.1 0 2.12-.18 3.07-.5" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="h-[38px] w-full rounded-[9px] bg-[#07883f] text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,100,40,0.25)] transition hover:bg-[#067537] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? "অ্যাকাউন্ট তৈরি হচ্ছে..." : "অ্যাকাউন্ট তৈরি করুন"}
+        </button>
+      </form>
+
+      <div className="my-[15px] flex items-center gap-[15px]">
+        <span className="h-[2px] flex-1 bg-[#e3e8e3]" />
+        <span className="text-[13px] text-[#626962]">অথবা</span>
+        <span className="h-[2px] flex-1 bg-[#e3e8e3]" />
       </div>
-    </main>
-  );
+
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={HandleGooGle}
+          type="button"
+          className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
+        >
+          <svg viewBox="0 0 48 48" className="h-[15px] w-[15px] shrink-0">
+            <path
+              fill="#EA4335"
+              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+            />
+            <path
+              fill="#4285F4"
+              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.94 46.98 31.78 46.98 24.55z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.93 23.93 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19z"
+            />
+            <path
+              fill="#34A853"
+              d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+            />
+          </svg>
+          <span>গুগল দিয়ে চালিয়ে যান</span>
+        </button>
+
+        <button
+          onClick={HandleGithub}
+          type="button"
+          className="flex h-[41px] min-w-0 items-center justify-center gap-[6px] whitespace-nowrap rounded-[9px] border border-[#dfe5df] bg-[#fbfcfb] px-1 text-[12px] font-semibold transition hover:bg-[#f1f5f1] sm:gap-[7px] sm:text-[13px]"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="h-[15px] w-[15px] shrink-0 fill-[#252b25]"
+          >
+            <path d="M12 .5A12 12 0 0 0 8.21 23.9c.6.11.82-.26.82-.58v-2.05c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.23-3.22-.13-.3-.54-1.53.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.65.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.62-2.8 5.64-5.48 5.94.43.37.81 1.1.81 2.22v3.3c0 .32.22.7.83.58A12 12 0 0 0 12 .5z" />
+          </svg>
+          <span>গিটহাব দিয়ে চালিয়ে যান</span>
+        </button>
+      </div>
+
+      <p className="mt-3 text-center text-[14px]">
+        অ্যাকাউন্ট আছে?{" "}
+        <Link
+          href="/api/sign-in"
+          className="font-semibold text-[#07883f] hover:underline"
+        >
+          সাইন ইন করুন
+        </Link>
+      </p>
+    </section>
+
+    <div className="mt-4 text-center">
+      <Link
+        href="/"
+        className="text-[14px] text-[#777d77] transition hover:text-[#07883f]"
+      >
+        ← হোম পেজে ফিরে যান
+      </Link>
+    </div>
+  </div>
+</main>
+
+);
 }
